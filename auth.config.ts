@@ -3,6 +3,7 @@ import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
 import { prisma } from "@/lib/db";
+import { UserService } from "./lib/services/user";
 
 export default {
   providers: [
@@ -17,9 +18,7 @@ export default {
           return null;
         }
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email as string },
-        });
+        const user = await UserService.getUserByEmail(credentials.email as string);
 
         if (!user || !user.password) {
           return null;

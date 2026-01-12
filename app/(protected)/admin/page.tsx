@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
 import { constructMetadata } from "@/lib/utils";
 import { DashboardHeader } from "@/components/dashboard/header";
-import InfoCard from "@/components/dashboard/info-card";
-import TransactionsList from "@/components/dashboard/transactions-list";
+import { ContentContainer } from "@/components/dashboard/content-container";
+import { Content } from "next/font/google";
 
 export const metadata = constructMetadata({
   title: "Admin – SaaS Starter",
@@ -21,7 +21,9 @@ export default async function AdminPage() {
         heading="Admin Panel"
         text="Access only for users with ADMIN role."
       />
-      <div className="flex flex-col gap-5">{/* Admin content here*/}</div>
+      <ContentContainer>
+        {/* Admin content here */}
+      </ContentContainer>
     </>
   );
 }

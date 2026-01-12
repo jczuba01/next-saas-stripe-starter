@@ -1,6 +1,7 @@
 import { getCurrentUser } from "@/lib/session";
 import { constructMetadata } from "@/lib/utils";
 import { DashboardHeader } from "@/components/dashboard/header";
+import { ContentContainer } from "@/components/dashboard/content-container";
 
 export const metadata = constructMetadata({
   title: "Dashboard",
@@ -16,7 +17,9 @@ export default async function DashboardPage() {
         heading="Dashboard"
         text={`Welcome, ${user?.name || user?.email}`}
       />
-      <div className="flex flex-col gap-5">{/* Your content here */}</div>
+      <ContentContainer>
+        {/* Your content here */}
+      </ContentContainer>
     </>
   );
 }
