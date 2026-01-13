@@ -13,6 +13,7 @@ export function ChatComponent() {
     setIsLoadingResponse,
     messages,
     addMessage,
+    clearMessages,
   } = useChatStore();
 
   const [prompt, setPrompt] = useState('');
@@ -80,6 +81,10 @@ export function ChatComponent() {
           </div>
         ))}
       </div>
+      <button 
+      onClick={clearMessages}>
+        Clear Chat
+      </button>
 
       {/* Prompt input */}
       <textarea
