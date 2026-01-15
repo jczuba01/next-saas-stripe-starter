@@ -12,15 +12,9 @@ export const sidebarLinks: SidebarNavItem[] = [
         title: "Admin Panel",
         authorizeOnly: UserRole.ADMIN,
       },
-      { href: "/dashboard", icon: "dashboard", title: "Dashboard" },
-      { href: "/dashboard/charts", icon: "lineChart", title: "Charts" },
-    ],
-  },
-  {
-    title: "OPTIONS",
-    items: [
-      { href: "/dashboard/settings", icon: "settings", title: "Settings" },
       { href: "/", icon: "home", title: "Homepage" },
+      { href: "/dashboard", icon: "dashboard", title: "Dashboard" },
+      { href: "/chat", icon: "laptop", title: "Chat" },
     ],
   },
 ];
