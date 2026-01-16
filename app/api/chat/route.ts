@@ -1,9 +1,14 @@
 import { NextResponse } from 'next/server';
-import { createChatCompletion } from '@/lib/services/openRouter.service';
+import { OpenRouterClient } from '@/lib/services/openrouter-client';
+import { OpenRouterChatMessage } from '@/types/global';
 
 export async function POST(req: Request) {
   try {
-    const { messages, modelId } = await req.json();
+    const body = await req.json();
+    const { messages, modelId } = body as {
+      modelId: string;
+      messages: OpenRouterChatMessage[];
+    }
 
     if (!modelId || !Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json(
@@ -12,10 +17,10 @@ export async function POST(req: Request) {
       );
     }
 
-    const data = await createChatCompletion({
-      model: modelId,
+    const data = await OpenRouterClient.createChatCompletion(
+      modelId,
       messages,
-    });
+    );
 
     return NextResponse.json(data);
   } catch (error) {

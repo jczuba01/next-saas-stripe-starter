@@ -1,8 +1,8 @@
-import { getFreeModels } from '@/lib/services/openRouterModels.service';
+import { OpenRouterClient } from '@/lib/services/openrouter-client';
 
 export async function GET() {
   try {
-    const models = await getFreeModels();
+    const models = await OpenRouterClient.getFreeModels();
     return Response.json({ models });
   } catch (error) {
     console.error('Models API Error:', error);

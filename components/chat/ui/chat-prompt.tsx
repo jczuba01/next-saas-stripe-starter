@@ -1,27 +1,29 @@
 import { useState } from 'react';
 import { useChatStore } from '@/components/chat/chat-store';
+import { useSendMessage } from '@/hooks/use-send-message'
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 export function ChatPrompt() {
   const { 
-    sendMessage, 
     clearMessages, 
     isLoadingResponse, 
     messages, 
     selectedModel, 
   } = useChatStore();
 
+  const { sendMessage } = useSendMessage();
+
   const [prompt, setPrompt] = useState('');
 
-  const handleSend = async () => {
+  const handleSend = () => {
     if (!prompt.trim() || !selectedModel) return;
-    await sendMessage(prompt);
+    sendMessage(prompt);
     setPrompt('');
   };
 
   return (
-    <footer className="chat-prompt flex gap-2">
+    <div className="chat-prompt flex gap-2">
       <Input
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
@@ -38,6 +40,6 @@ export function ChatPrompt() {
       <Button onClick={clearMessages} disabled={messages.length === 0}>
         Clear Chat
       </Button>
-    </footer>
+    </div>
   );
 }

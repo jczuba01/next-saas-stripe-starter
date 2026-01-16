@@ -1,5 +1,4 @@
 import { useChatStore } from '@/components/chat/chat-store';
-import { useModels } from '@/hooks/useModels';
 
 import { 
   Select,
@@ -10,8 +9,13 @@ import {
 } from '@/components/ui/select';
 
 export function ChatModelSelector() {
-  const { models, isLoading } = useModels();
-  const { selectedModel, setSelectedModel } = useChatStore();
+  const { 
+    models, 
+    selectedModel,
+    isLoadingModels,
+    setSelectedModel,
+  } = useChatStore();
+
 
   return (
     <div className="chat-model-selector">
@@ -21,7 +25,7 @@ export function ChatModelSelector() {
           const model = models.find((m) => m.id === modelId);
           if (model) setSelectedModel(model);
         }}
-        disabled={isLoading}
+        disabled={isLoadingModels}
       >
         <SelectTrigger>
           <SelectValue placeholder="Select model" />
