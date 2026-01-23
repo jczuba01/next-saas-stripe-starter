@@ -1,6 +1,7 @@
 import { constructMetadata } from "@/lib/utils";
-import { DashboardHeader } from "@/components/dashboard/header";
+import { DashboardHeader } from "@/components/dashboard/header";  
 import { ContentContainer } from "@/components/dashboard/content-container";
+import { ChatComponent } from "@/components/chat/chat-component";
 
 export const metadata = constructMetadata({
   title: "Chat",

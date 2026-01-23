@@ -1,51 +1,61 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-
-
-export interface ModelData {
-    id: string
-    name: string
-    description: string
-    supportedParameters: string[]
-    // Add other relevant fields
-}
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { Message, OpenRouterModel } from '@/types/global';
+import { fetchModels } from '@/hooks/use-models';
 
 interface ChatState {
-  // Selected metrics for current experiment
-  selectedModel: ModelData | null
-  availableModels: ModelData[]
-  loading: boolean
-  error: string | null
+  models: OpenRouterModel[];
+  selectedModel: OpenRouterModel | null;
+  messages: Message[];
+  isLoadingModels: boolean;
+  isLoadingResponse: boolean;
+  error: string | null;
 
-  setSelectedModel: (model: ModelData) => void
-  setAvailableModels: (models: ModelData[]) => void
-  setLoading: (loading: boolean) => void
-  setError: (error: string | null) => void
-
-  fetchModels: (params: { applicationId: string }) => Promise<void>
+  loadModels: () => Promise<void>;
+  setSelectedModel: (model: OpenRouterModel | null) => void;
+  clearMessages: () => void;
+  addMessage: (message: Message) => void;
+  setLoading: (loading: boolean) => void;
+  setError: (error: string | null) => void;
 }
 
-export const useMetricsStore = create<ChatState>()(
+export const useChatStore = create<ChatState>()(
   persist(
-    set => ({
-        selectedModel: null,
-        availableModels: [],
-        loading: false,
-        error: null,
-        setAvailableModels: (models: ModelData[]) =>
-        set(() => ({
-          availableModels: models,
-        })),
+    (set) => ({
+      models: [],
+      selectedModel: null,
+      messages: [],
+      isLoadingModels: false,
+      isLoadingResponse: false,
+      error: null,
 
-      setSelectedModel: (model: ModelData) =>
-        set(() => ({
-          selectedModel: model,
-        })),
-
-
-      fetchModels: async ({ applicationId }) => {
-        // Implementation for fetching models and updating state
+      loadModels: async () => {
+        set({ isLoadingModels: true, error: null });
+        try {
+          const models = await fetchModels();
+          set({ models });
+        } catch (e) {
+          set({
+            error: e instanceof Error ? e.message : 'Models error',
+          });
+        } finally {
+          set({ isLoadingModels: false });
+        }
       },
+
+      setSelectedModel: (model) => set({ selectedModel: model }),
+
+      clearMessages: () => set({ messages: [] }),
+
+      addMessage: (message) =>
+        set((state) => ({
+          messages: [...state.messages, message],
+        })),
+
+      setLoading: (loading) => set({ isLoadingResponse: loading }),
+
+      setError: (error) => set({ error }),
     }),
+    { name: 'chat-store' },
   ),
-)
+);

@@ -3,8 +3,8 @@ import Link from "next/link";
 export function AuthSection() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold">Home Page</h1>
-      <p className="mt-4 text-gray-600">Apppppp</p>
+      <h1 className="text-4xl font-bold">Welcome to Chat App</h1>
+      <p className="mt-4 text-gray-600">Get started by logging in or creating a new account</p>
       <AuthLinks />
     </div>
   );

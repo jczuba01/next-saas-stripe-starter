@@ -18,7 +18,7 @@ export default {
           return null;
         }
 
-        const user = await UserService.getUserByEmail(credentials.email as string);
+        const user = await UserService.getUserByEmail(credentials.email as string );
 
         if (!user || !user.password) {
           return null;
