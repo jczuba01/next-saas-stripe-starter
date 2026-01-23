@@ -1,6 +1,6 @@
-import { AppModel } from '@/types/global';
+import { OpenRouterModel } from '@/types/global';
 
-export async function fetchModels(): Promise<AppModel[]> {
+export async function fetchModels(): Promise<OpenRouterModel[]> {
   const response = await fetch('/api/models');
 
   if (!response.ok) {
@@ -8,5 +8,5 @@ export async function fetchModels(): Promise<AppModel[]> {
   }
 
   const data = await response.json();
-  return data.models as AppModel[];
+  return data.models as OpenRouterModel[];
 }

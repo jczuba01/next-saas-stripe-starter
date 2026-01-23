@@ -1,18 +1,18 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { AppModel, Message } from '@/types/global';
+import { Message, OpenRouterModel } from '@/types/global';
 import { fetchModels } from '@/hooks/use-models';
 
 interface ChatState {
-  models: AppModel[];
-  selectedModel: AppModel | null;
+  models: OpenRouterModel[];
+  selectedModel: OpenRouterModel | null;
   messages: Message[];
   isLoadingModels: boolean;
   isLoadingResponse: boolean;
   error: string | null;
 
   loadModels: () => Promise<void>;
-  setSelectedModel: (model: AppModel | null) => void;
+  setSelectedModel: (model: OpenRouterModel | null) => void;
   clearMessages: () => void;
   addMessage: (message: Message) => void;
   setLoading: (loading: boolean) => void;

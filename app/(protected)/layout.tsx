@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation";
 
-import { sidebarLinks } from "@/config/dashboard";
+import { sidebarLinks } from "@/config/sidebar";
 import { getCurrentUser } from "@/lib/session";
 import { SearchCommand } from "@/components/dashboard/search-command";
 import {
   DashboardSidebar,
   MobileSheetSidebar,
-} from "@/components/layout/dashboard-sidebar";
+} from "@/components/sidebar/sidebar";
 import { ModeToggle } from "@/components/layout/mode-toggle";
 import { UserAccountNav } from "@/components/layout/user-account-nav";
 import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
@@ -36,9 +36,7 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
           <MaxWidthWrapper className="flex max-w-7xl items-center gap-x-3 px-0">
             <MobileSheetSidebar links={filteredLinks} />
 
-            <div className="w-full flex-1">
-              <SearchCommand links={filteredLinks} />
-            </div>
+            <div className="w-full flex-1" />
 
             <ModeToggle />
             <UserAccountNav />

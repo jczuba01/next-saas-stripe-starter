@@ -61,7 +61,7 @@ export function UserAuthForm({ className, type, ...props }: UserAuthFormProps) {
         return toast.error("Invalid email or password");
       }
 
-      router.push(searchParams?.get("from") || "/dashboard");
+      router.push(searchParams?.get("from") || "/home");
     }
   }
 

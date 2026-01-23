@@ -1,8 +1,5 @@
-import {
-  OpenRouterModel,
-  OpenRouterChatMessage,
-  AppModel,
-} from '@/types/global';
+import { OpenRouterModel, OpenRouterChatMessage } from '@/types/global';
+import { ModelRepository } from '@/lib/repositories/model';
 
 const BASE_URL = 'https://openrouter.ai/api/v1';
 
@@ -14,30 +11,16 @@ export class OpenRouterClient {
     'X-Title': 'My Chat App',
   };
 
-  // MODELS
-  static async getFreeModels(): Promise<AppModel[]> {
-    const res = await fetch(`${BASE_URL}/models`, {
-      headers: this.headers,
-    });
+  // MODELS - business logic: filter free models
+  static async getFreeModels(): Promise<OpenRouterModel[]> {
+    const models = await ModelRepository.getModels();
 
-    const data: { data?: OpenRouterModel[]; error?: string } =
-      await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.error || 'OpenRouter models error');
-    }
-
-    return (data.data ?? [])
+    return models
       .filter(
         (m) =>
           m.pricing?.prompt === '0' &&
           m.pricing?.completion === '0',
-      )
-      .map<AppModel>((m) => ({
-        id: m.id,
-        name: m.name ?? m.id,
-        description: m.description ?? 'Free model',
-      }));
+      ) as OpenRouterModel[];
   }
 
   // CHAT

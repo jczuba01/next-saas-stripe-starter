@@ -4,25 +4,28 @@ import { getCurrentUser } from "@/lib/session";
 import { constructMetadata } from "@/lib/utils";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { ContentContainer } from "@/components/dashboard/content-container";
-import { Content } from "next/font/google";
+import { UserNameForm } from "@/components/forms/user-name-form";
+import { DeleteAccountSection } from "@/components/dashboard/delete-account";
 
 export const metadata = constructMetadata({
-  title: "Admin – SaaS Starter",
-  description: "Admin page for only admin management.",
+  title: "Settings",
+  description: "Manage your account settings.",
 });
 
-export default async function AdminPage() {
+export default async function SettingsPage() {
   const user = await getCurrentUser();
-  if (!user || user.role !== "ADMIN") redirect("/login");
+
+  if (!user?.id) redirect("/login");
 
   return (
     <>
       <DashboardHeader
-        heading="Admin Panel"
-        text="Access only for users with ADMIN role."
+        heading="Settings"
+        text="Manage your account settings."
       />
       <ContentContainer>
-        {/* Admin content here */}
+        <UserNameForm user={{ id: user.id, name: user.name || "" }} />
+        <DeleteAccountSection />
       </ContentContainer>
     </>
   );
