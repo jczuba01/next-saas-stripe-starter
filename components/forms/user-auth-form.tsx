@@ -4,7 +4,7 @@ import * as React from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
-import { registerUser } from "@/actions/register-user";
+import { registerUser } from "@/actions/user";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Icons } from "@/components/shared/icons";
+import { User } from "@/types/global";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   type?: string;
@@ -38,11 +39,11 @@ export function UserAuthForm({ className, type, ...props }: UserAuthFormProps) {
     setIsLoading(true);
 
     if (type === "register") {
-      const result = await registerUser(data);
+      const result = await registerUser(data as User);
 
       setIsLoading(false);
 
-      if (result.error) {
+      if (result.success === false) {
         return toast.error(result.error);
       }
 

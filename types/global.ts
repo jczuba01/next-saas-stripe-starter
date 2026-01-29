@@ -1,3 +1,5 @@
+export type { User } from '@prisma/client';
+
 //OPENROUTER - API TYPES
 
 export interface OpenRouterPricing {
@@ -38,3 +40,5 @@ export interface Message {
   content: string;
   timestamp: string;
 }
+
+export type ActionResult<T> = { success: true; data: T } | { success: false; error: string }

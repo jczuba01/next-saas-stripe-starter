@@ -1,38 +1,39 @@
 import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/db";
+import { userNameSchema } from "@/lib/validations/user";
+import { User } from "@/types/global";
+import { UserRepository } from "../repositories/user";
 
 export class UserService {
-  static async getUserByEmail(email: string) {
-    return prisma.user.findUnique({
-      where: { email },
-    });
+  static async getUserByEmail(email: string): Promise<User | null> {
+    return UserRepository.getUserByEmail(email);
   }
 
-  static async createUser(email: string, password: string) {
-    const hashedPassword = await bcrypt.hash(password, 10);
+  static async createUser(user: User): Promise<User> {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const newUser = { email: user.email, password: hashedPassword } as User;
 
-    return prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-      },
-    });
+    return UserRepository.createUser(newUser);
   }
 
-  static async registerUser(data: { email: string; password: string }) {
-    const { email, password } = data;
+  static async registerUser(user: User): Promise<User | null> {
+    const { email, password } = user;
 
     if (!email || !password) {
-      return { error: "Email and password required" };
+      return null;
     }
 
     const existingUser = await this.getUserByEmail(email);
     if (existingUser) {
-      return { error: "User already exists" };
+      return null; 
     }
 
-    await this.createUser(email, password);
-
-    return { success: true };
+    return this.createUser(user);
   }
+
+  static async updateUserName(user: User): Promise<User> {
+        const { name } = userNameSchema.parse(user.name);
+    return UserRepository.updateUser({ ...user, name });
+        // Update the user name.
+        
+}
 }
