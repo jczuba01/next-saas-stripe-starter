@@ -47,12 +47,10 @@ const baseLogger = pino(pinoConfig)
 export const logger = baseLogger
 
 // Export named loggers for different modules
-export const apiLogger = logger.child({ module: 'api' })
+const apiLogger = logger.child({ module: 'api' })
 const actionLogger = logger.child({ module: 'action' })
-export const inngestLogger = logger.child({ module: 'inngest' })
-export const serviceLogger = logger.child({ module: 'service' })
-export const repositoryLogger = logger.child({ module: 'repository' })
-const cronLogger = logger.child({ module: 'cron' })
+const serviceLogger = logger.child({ module: 'service' })
+const repositoryLogger = logger.child({ module: 'repository' })
 
 // ==================== V2 Platform Logger ====================
 
@@ -178,5 +176,4 @@ export const log = {
   action: createLayerLogger(actionLogger),
   service: createLayerLogger(serviceLogger),
   repository: createLayerLogger(repositoryLogger),
-  cron: createLayerLogger(cronLogger),
 }
