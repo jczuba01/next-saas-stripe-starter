@@ -26,3 +26,16 @@ model User {
 
   @@map(name: "users")
 }
+
+model Model {
+  id                String   @id
+  name              String
+  description       String?
+  pricingPrompt     String?  @map(name: "pricing_prompt")
+  pricingCompletion String?  @map(name: "pricing_completion")
+  isFree            Boolean  @default(false) @map(name: "is_free")
+  createdAt         DateTime @default(now()) @map(name: "created_at")
+  updatedAt         DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "models")
+}

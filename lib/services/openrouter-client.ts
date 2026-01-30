@@ -13,14 +13,7 @@ export class OpenRouterClient {
 
   // MODELS - business logic: filter free models
   static async getFreeModels(): Promise<OpenRouterModel[]> {
-    const models = await ModelRepository.getModels();
-
-    return models
-      .filter(
-        (m) =>
-          m.pricing?.prompt === '0' &&
-          m.pricing?.completion === '0',
-      ) as OpenRouterModel[];
+    return ModelRepository.getFreeModels() as Promise<OpenRouterModel[]>;
   }
 
   // CHAT
