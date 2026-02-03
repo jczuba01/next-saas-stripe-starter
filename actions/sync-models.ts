@@ -1,6 +1,6 @@
-"use server";
+'use server';
 
-import { syncModelsService } from "@/lib/services/sync-models";
+import { syncModelsService } from "@/lib/services/model";
 import { ActionResult } from "@/types/global";
 
 export async function syncModelsAction(): Promise<ActionResult<{ count: number }>> {

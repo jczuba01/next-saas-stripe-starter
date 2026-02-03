@@ -1,5 +1,5 @@
 import { OpenRouterClient } from '@/lib/services/openrouter-client';
-import { syncModelsService } from '@/lib/services/sync-models';
+import { syncModelsService } from '@/lib/services/model';
 
 export async function GET() {
   try {

@@ -1,49 +1,11 @@
 import { prisma } from '@/lib/db';
+import { OpenRouterModel } from '@/types/global';
 
-// Raw types from external API
-export interface OpenRouterModelRaw {
-  id: string;
-  name?: string;
-  description?: string;
-  pricing?: {
-    prompt: string;
-    completion: string;
-  };
-}
-
-interface OpenRouterResponse {
-  data?: OpenRouterModelRaw[];
-  error?: string;
-}
-
-const BASE_URL = 'https://openrouter.ai/api/v1';
-
-// Repository - data access (OpenRouter API + DB)
+// Repository - data access (DB)
 export class ModelRepository {
-  private static headers = {
-    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-    'Content-Type': 'application/json',
-    'HTTP-Referer': 'http://localhost:3000',
-    'X-Title': 'My Chat App',
-  };
-
-  // Fetch all models from OpenRouter API
-  static async fetchFromOpenRouter(): Promise<OpenRouterModelRaw[]> {
-    const res = await fetch(`${BASE_URL}/models`, {
-      headers: this.headers,
-    });
-
-    const data: OpenRouterResponse = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.error || 'OpenRouter models error');
-    }
-
-    return data.data ?? [];
-  }
-
-  // Upsert models into DB
-static async upsertModels(models: OpenRouterModelRaw[]): Promise<number> {
+  
+// Upsert models into DB
+static async upsertModels(models: OpenRouterModel[]): Promise<number> {
   if (!models.length) return 0;
 
   await prisma.$transaction(
@@ -81,6 +43,7 @@ static async upsertModels(models: OpenRouterModelRaw[]): Promise<number> {
     });
   }
 
+  //Read free models from DB
   static async getFreeModels() {
     return prisma.model.findMany({
       where: { isFree: true },
