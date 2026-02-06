@@ -1,41 +1,53 @@
-// Raw types from external API
-export interface OpenRouterModelRaw {
-  id: string;
-  name?: string;
-  description?: string;
-  pricing?: {
-    prompt: string;
-    completion: string;
-  };
-}
+import { prisma } from '@/lib/db';
+import { OpenRouterModel } from '@/types/global';
 
-interface OpenRouterResponse {
-  data?: OpenRouterModelRaw[];
-  error?: string;
-}
-
-const BASE_URL = 'https://openrouter.ai/api/v1';
-
-// Repository - only data access (raw)
+// Repository - data access (DB)
 export class ModelRepository {
-  private static headers = {
-    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-    'Content-Type': 'application/json',
-    'HTTP-Referer': 'http://localhost:3000',
-    'X-Title': 'My Chat App',
-  };
+  
+// Upsert models into DB
+static async upsertModels(models: OpenRouterModel[]): Promise<number> {
+  if (!models.length) return 0;
 
-  static async getModels(): Promise<OpenRouterModelRaw[]> {
-    const res = await fetch(`${BASE_URL}/models`, {
-      headers: this.headers,
+  await prisma.$transaction(
+    models.map((model) => {
+      const isFree = model.pricing?.prompt === '0' && model.pricing?.completion === '0';
+      
+      return prisma.model.upsert({
+        where: { id: model.id },
+        create: {
+          id: model.id,
+          name: model.name ?? model.id,
+          description: model.description ?? null,
+          pricingPrompt: model.pricing?.prompt ?? null,
+          pricingCompletion: model.pricing?.completion ?? null,
+          isFree,
+        },
+        update: {
+          name: model.name ?? model.id,
+          description: model.description ?? null,
+          pricingPrompt: model.pricing?.prompt ?? null,
+          pricingCompletion: model.pricing?.completion ?? null,
+          isFree,
+        },
+      });
+    })
+  );
+
+  return models.length;
+}
+
+  // Read persisted models from DB
+  static async getPersistedModels() {
+    return prisma.model.findMany({
+      orderBy: { name: 'asc' },
     });
+  }
 
-    const data: OpenRouterResponse = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.error || 'OpenRouter models error');
-    }
-
-    return data.data ?? [];
+  //Read free models from DB
+  static async getFreeModels() {
+    return prisma.model.findMany({
+      where: { isFree: true },
+      orderBy: { name: 'asc' },
+    });
   }
 }

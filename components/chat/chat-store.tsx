@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Message, OpenRouterModel } from '@/types/global';
 import { fetchModels } from '@/hooks/use-models';
+import { syncModelsAction } from '@/actions/sync-models';
 
 interface ChatState {
   models: OpenRouterModel[];
@@ -12,6 +13,7 @@ interface ChatState {
   error: string | null;
 
   loadModels: () => Promise<void>;
+  syncModels: () => Promise<void>;
   setSelectedModel: (model: OpenRouterModel | null) => void;
   clearMessages: () => void;
   addMessage: (message: Message) => void;
@@ -37,6 +39,25 @@ export const useChatStore = create<ChatState>()(
         } catch (e) {
           set({
             error: e instanceof Error ? e.message : 'Models error',
+          });
+        } finally {
+          set({ isLoadingModels: false });
+        }
+      },
+      syncModels: async () => {
+        set({ isLoadingModels: true, error: null });
+        try {
+          const result = await syncModelsAction();
+
+          if (!result.success) {
+            throw new Error(result.error || 'Sync models failed');
+          }
+
+          const models = await fetchModels();
+          set({ models });
+        } catch (e) {
+          set({
+            error: e instanceof Error ? e.message : 'Sync models error',
           });
         } finally {
           set({ isLoadingModels: false });
