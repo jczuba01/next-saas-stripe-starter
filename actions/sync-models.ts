@@ -1,11 +1,11 @@
 'use server';
 
-import { syncModelsService } from "@/lib/services/model";
+import { ModelService } from "@/lib/services/model";
 import { ActionResult } from "@/types/global";
 
 export async function syncModelsAction(): Promise<ActionResult<{ count: number }>> {
   try {
-    const count = await syncModelsService();
+    const count = await ModelService.syncModels();
     return { success: true, data: { count } };
   } catch (error) {
     return {

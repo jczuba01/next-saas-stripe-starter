@@ -1,9 +1,8 @@
-import { OpenRouterClient } from '@/lib/services/openrouter-client';
-import { syncModelsService } from '@/lib/services/model';
+import { ModelService } from '@/lib/services/model';
 
 export async function GET() {
   try {
-    const models = await OpenRouterClient.getFreeModels();
+    const models = await ModelService.getFreeModels();
     return Response.json({ models });
   } catch (error) {
     console.error('Models API Error:', error);
@@ -16,7 +15,7 @@ export async function GET() {
 
 export async function POST() {
   try {
-    const count = await syncModelsService();
+    const count = await ModelService.syncModels();
     return Response.json({ count });
   } catch (error) {
     console.error('Sync Models API Error:', error);
