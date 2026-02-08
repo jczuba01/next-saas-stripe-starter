@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { updateUserName, type FormData } from "@/actions/update-user-name";
+import { updateUserName } from "@/actions/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "@prisma/client";
 import { useSession } from "next-auth/react";
@@ -19,6 +19,10 @@ interface UserNameFormProps {
   user: Pick<User, "id" | "name">;
 }
 
+interface UserNameFormData {
+  name: string;
+}
+
 export function UserNameForm({ user }: UserNameFormProps) {
   const { update } = useSession();
   const [updated, setUpdated] = useState(false);
@@ -33,7 +37,7 @@ export function UserNameForm({ user }: UserNameFormProps) {
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<UserNameFormData>({
     resolver: zodResolver(userNameSchema),
     defaultValues: {
       name: user?.name || "",
